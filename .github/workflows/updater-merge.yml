@@ -6,7 +6,10 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  merge_branches:
+    strategy:
+      matrix:
+        branch: ["lineage-21.0", "lineage-22.0"]
     runs-on: ubuntu-latest
     name: Merge upstream changes to Updater application
     steps:
@@ -14,18 +17,18 @@ jobs:
         with:
           persist-credentials: false
           repository: 'lifehacker-101/android_packages_apps_Updater'
-          ref: 'lineage-21.0'
+          ref: ${{ matrix.branch }}
           fetch-depth: 0
       - name: Fetch and merge upstream changes
         run: |
           git config --local user.name ${{ secrets.GIT_USER }}
           git config --local user.email ${{ secrets.GIT_EMAIL }}
-          git fetch https://github.com/LineageOS/android_packages_apps_Updater lineage-21.0
+          git fetch https://github.com/LineageOS/android_packages_apps_Updater ${{ matrix.branch }}
           git merge FETCH_HEAD
       - name: Push changes
         uses: ad-m/github-push-action@master
         with:
           repository: 'lifehacker-101/android_packages_apps_Updater'
-          branch: 'lineage-21.0'
-          github_token: ${{ secrets.UPDATER_TOKEN}}
+          branch: ${{ matrix.branch }}
+          github_token: ${{ secrets.UPDATER_TOKEN }}
 
