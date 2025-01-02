@@ -9,7 +9,7 @@ jobs:
   merge_branches:
     strategy:
       matrix:
-        branch: ["lineage-21.0", "lineage-22.0"]
+        branch: ["lineage-21.0", "lineage-22.1"]
     runs-on: ubuntu-latest
     name: Merge upstream changes to Updater application
     steps:
